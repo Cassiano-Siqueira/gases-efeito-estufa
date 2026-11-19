@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="assets/Brasão-la-salle.ico">
+    <title>Artigo Acadêmico - Emissões de GEE (Rio de Janeiro)</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 40px 60px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        h1 {
+            color: var(--primary-color);
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+        .titulo-site {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        .logo-la-salle {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
+        .authors {
+            font-size: 1.2em;
+            color: var(--secondary-color);
+            font-style: italic;
+        }
+        .affiliation {
+            font-size: 1em;
+            color: #7f8c8d;
+            margin-bottom: 15px;
+        }
+        .badges img {
+            margin: 0 5px;
+        }
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            margin-top: 40px;
+        }
+        h3 {
+            color: var(--secondary-color);
+        }
+        p {
+            text-align: justify;
+            margin-bottom: 15px;
+        }
+        .abstract {
+            background-color: #eaf2f8;
+            padding: 20px;
+            border-left: 4px solid var(--accent-color);
+            margin-bottom: 30px;
+        }
+        .figure-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .figure-container img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .figure-caption {
+            font-size: 0.9em;
+            color: #555;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        code, pre {
+            background-color: #f4f4f4;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        pre {
+            padding: 15px;
+            overflow-x: auto;
+            border: 1px solid #ddd;
+        }
+        .btn-github {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #24292e;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        .btn-github:hover {
+            background-color: #000;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="titulo-site">
+            <img src="assets/brasao-la-salle.png" alt="Brasão La Salle" class="logo-la-salle">
+            <h1>Análise Exploratória das Emissões de Gases de Efeito Estufa na Cidade do Rio de Janeiro</h1>
+        </div>
+        <div class="authors">Cassiano Siqueira & André de Moraes</div>
+        <div class="affiliation">Bacharelado em Sistemas de Informação (6º Período) - Unilasalle - RJ</div>
+                <a href="https://github.com/Cassiano-Siqueira/gases-efeito-estufa" class="btn-github">Acessar Repositório no GitHub</a>
+    </header>
+
+    <div class="abstract">
+        <strong>Resumo:</strong> Este artigo documenta a construção de um pipeline de engenharia de dados e a subsequente análise exploratória do inventário de emissões de Gases de Efeito Estufa (GEE) da cidade do Rio de Janeiro entre 2012 e 2024. Utilizando Python (Pandas, Matplotlib, Seaborn) sob a égide dos princípios FAIR, o estudo higienizou um conjunto de dados governamental complexo, convertendo-o de um formato agregado para um modelo relacional tabular. Os achados revelam tendências importantes nas emissões do Escopo 1 (com destaque para o setor de transportes) e do Escopo 2 (consumo elétrico residencial e comercial), fornecendo subsídios orientados a dados para políticas públicas de mitigação climática urbana.<br><br>
+           </div>
+
+    <h2>1. Introdução</h2>
+    <p>A transição para matrizes energéticas sustentáveis e a mitigação das emissões de Gases de Efeito Estufa (GEE) representam desafios primordiais para as grandes metrópoles. Na cidade do Rio de Janeiro, monitorar esses indicadores é vital para o cumprimento de metas climáticas internacionais. O presente projeto visa aplicar técnicas de Engenharia de Dados para auditar e visualizar o comportamento dessas emissões na última década.</p>
+    <p>Para guiar a análise exploratória e a extração de insights do conjunto de dados, foram estabelecidas as seguintes Perguntas de Pesquisa (Research Questions - RQ):</p>
+    <ul>
+        <li><strong>RQ1:</strong> Como o volume total de emissões de GEE (CO2) no Rio de Janeiro evoluiu ao longo do período (2012-2024)?</li>
+        <li><strong>RQ2:</strong> Quais são os macrossetores que atuam como os principais ofensores de emissões diretas (Escopo 1)?</li>
+        <li><strong>RQ3:</strong> Ao analisar as emissões indiretas por aquisição de energia (Escopo 2), qual a proporção de responsabilidade dos subsetores Residencial e Comercial?</li>
+    </ul>
+
+    <h2>2. Metodologia e Pipeline de Dados</h2>
+    <p>A fonte de dados primária foi extraída do portal de dados abertos da prefeitura, o <em>Data.Rio</em>. O arquivo original (<code>3696.xls</code>) apresentava um formato <em>wide</em> com cabeçalhos multinível, dificultando a ingestão direta por ferramentas de BI e bibliotecas estatísticas.</p>
+    <p>Para o tratamento, desenvolveu-se um script de ETL em Python (<code>src/etl.py</code>) que utilizou a biblioteca <em>Pandas</em>. O processo aplicou a técnica de <em>forward fill</em> para reconstruir anos mesclados, seguido da função <code>pd.melt()</code>, que transformou as múltiplas colunas de anos e escopos numa estrutura <em>long format</em> contendo variáveis limpas: <code>ano</code>, <code>setor</code>, <code>escopo</code> e <code>emissao_tCO2e</code>. Operações de <em>casting</em> garantiram a tipagem correta para exploração numérica contínua.</p>
+
+    <h2>3. Resultados e Discussão</h2>
+    
+    <h3>3.1. Evolução Temporal das Emissões (RQ1)</h3>
+    <p>O gráfico abaixo exibe a linha de tendência do somatório geral de emissões de CO2 na cidade. Observa-se o comportamento macro do município em relação a esforços de mitigação ao longo da década, permitindo identificar picos ou vales associados a eventos econômicos ou políticas ambientais.</p>
+    <div class="figure-container">
+        <img src="assets/rq1_evolucao_temporal.png" alt="Gráfico de Evolução Temporal das Emissões">
+        <div class="figure-caption">Figura 1: Evolução anual das emissões totais de GEE na cidade do Rio de Janeiro.</div>
+    </div>
+
+    <h3>3.2. Principais Ofensores de Emissões Diretas - Escopo 1 (RQ2)</h3>
+    <p>Ao isolar o Escopo 1 (emissões físicas ocorridas dentro dos limites da cidade), a agregação aponta os setores mais críticos. Os transportes, em especial o modal rodoviário, costumam liderar esta categoria devido à forte dependência de combustíveis fósseis (diesel e gasolina) na logística e mobilidade urbana carioca.</p>
+    <div class="figure-container">
+        <img src="assets/rq2_ofensores_escopo1.png" alt="Gráfico dos Maiores Ofensores do Escopo 1">
+        <div class="figure-caption">Figura 2: Top 5 setores com maiores emissões diretas (Escopo 1).</div>
+    </div>
+
+    <h3>3.3. Matriz Energética: Residencial vs Comercial - Escopo 2 (RQ3)</h3>
+    <p>O Escopo 2 reflete a emissão indireta gerada pela produção da energia elétrica consumida. A comparação entre os subsetores "Residencial" e "Comercial" demonstra o balanço de demanda energética da cidade. Variações anuais nestas curvas são frequentemente explicadas por crises hídricas (que acionam termelétricas, aumentando o fator de emissão do SIN - Sistema Interligado Nacional) e por dinâmicas de <em>home office</em> e reabertura do comércio.</p>
+    <div class="figure-container">
+        <img src="assets/rq3_matriz_energetica.png" alt="Gráfico de Emissões do Escopo 2">
+        <div class="figure-caption">Figura 3: Emissões indiretas por aquisição de energia elétrica (Residencial x Comercial).</div>
+    </div>
+
+    <h2>4. Conclusão</h2>
+    <p>O presente estudo demonstrou a eficácia da aplicação de técnicas de engenharia de dados em Python para o tratamento de planilhas governamentais não estruturadas. A análise exploratória confirmou a necessidade de políticas focadas na descarbonização da frota rodoviária (Escopo 1) e em medidas de eficiência energética para residências e comércio (Escopo 2). Como limitação, o estudo restringe-se aos dados reportados pelo município. Trabalhos futuros poderiam cruzar esses indicadores com dados do PIB municipal para analisar a intensidade de emissões por atividade econômica.</p>
+
+    <h2>5. Disponibilidade dos Dados e Declaração FAIR</h2>
+    <p>Este projeto foi construído em estrita observância aos <strong>Princípios FAIR</strong>:</p>
+    <ul>
+        <li><strong>Findable (Localizável):</strong> Repositório documentado e estruturado.</li>
+        <li><strong>Accessible (Acessível):</strong> Código aberto e dados disponíveis sem necessidade de autenticação.</li>
+        <li><strong>Interoperable (Interoperável):</strong> Dados processados persistidos em padrão aberto (CSV) acompanhados de um <code>data_dictionary.md</code>.</li>
+        <li><strong>Reusable (Reutilizável):</strong> Ambiente isolado através do <code>requirements.txt</code> e licenciado via MIT.</li>
+    </ul>
+    <p>Para reproduzir o ambiente integralmente (via terminal Bash/PowerShell):</p>
+    <pre><code>git clone https://github.com/Cassiano-Siqueira/gases-efeito-estufa.git
+cd gases-efeito-estufa
+python -m venv .venv
+# Ativar o ambiente (dependendo do OS)
+pip install -r requirements.txt
+python src/etl.py</code></pre>
+
+    <h2>6. Referências</h2>
+    <ol>
+        <li>DATA.RIO. <em>Emissões de gases de efeito estufa (GEE) da Cidade do Rio de Janeiro</em>. Disponível em: https://www.data.rio. Acesso em: 2026.</li>
+        <li>MCKINNEY, Wes. <em>Data Structures for Statistical Computing in Python</em>, Proceedings of the 9th Python in Science Conference, 2010.</li>
+        <li>WILKINSON, M. D. et al. <em>The FAIR Guiding Principles for scientific data management and stewardship</em>. Scientific Data, v. 3, n. 160018, 2016.</li>
+    </ol>
+</div>
+
+</body>
+</html>
