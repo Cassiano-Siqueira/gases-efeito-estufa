@@ -11,7 +11,7 @@
 | **Orientador(a)** | _[NOME COMPLETO DO PROFESSOR ORIENTADOR]_ |
 | **Instituição / Curso** | Unilasalle RJ, Bacharelado em Sistemas de Informação (6º período) |
 | **Disciplina** | Linguagem de Programação (Análise e Visualização de Dados com Python) |
-| **Semestre** | _[2026.2, confirmar]_ |
+| **Semestre** | _[2026.2]_ |
 | **Artigo (GitHub Pages)** | <https://cassiano-siqueira.github.io/gases-efeito-estufa/> |
 
 **Palavras-chave:** gases de efeito estufa · inventário de emissões · Rio de Janeiro · dados abertos · Python · princípios FAIR
@@ -131,10 +131,6 @@ Detalhes completos, domínios e tratamentos aplicados: [`data/data_dictionary.md
 - A base não contém variáveis explicativas (PIB, clima, fatores de emissão); as interpretações causais do artigo são **hipóteses**.
 - O símbolo `NE` não consta nas notas da fonte; foi interpretado como "não estimado".
 - Apenas a aba por escopo é analisada (a aba por gás (CO₂, CH₄, N₂O) não foi explorada).
-
-## Trabalhos futuros
-
-Cruzar as emissões com PIB e população do município · incorporar fatores de emissão da rede elétrica (hipótese da RQ3) · analisar a decomposição por gás · automatizar o download dos dados.
 
 ---
 
