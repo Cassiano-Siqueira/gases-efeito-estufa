@@ -1,209 +1,449 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="assets/Brasão-la-salle.ico">
-    <title>Artigo Acadêmico - Emissões de GEE (Rio de Janeiro)</title>
-    <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #34495e;
-            --accent-color: #3498db;
-            --bg-color: #f8f9fa;
-            --text-color: #333;
-        }
-        body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            background-color: var(--bg-color);
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 900px;
-            margin: 40px auto;
-            background: #fff;
-            padding: 40px 60px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            border-radius: 8px;
-        }
-        header {
-            text-align: center;
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-        }
-        h1 {
-            color: var(--primary-color);
-            font-size: 2.2em;
-            margin-bottom: 10px;
-        }
-        .titulo-site {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-        }
-        .logo-la-salle {
-            width: 80px;
-            height: 80px;
-            object-fit: contain;
-        }
-        .authors {
-            font-size: 1.2em;
-            color: var(--secondary-color);
-            font-style: italic;
-        }
-        .affiliation {
-            font-size: 1em;
-            color: #7f8c8d;
-            margin-bottom: 15px;
-        }
-        .badges img {
-            margin: 0 5px;
-        }
-        h2 {
-            color: var(--primary-color);
-            border-bottom: 1px solid #eee;
-            padding-bottom: 5px;
-            margin-top: 40px;
-        }
-        h3 {
-            color: var(--secondary-color);
-        }
-        p {
-            text-align: justify;
-            margin-bottom: 15px;
-        }
-        .abstract {
-            background-color: #eaf2f8;
-            padding: 20px;
-            border-left: 4px solid var(--accent-color);
-            margin-bottom: 30px;
-        }
-        .figure-container {
-            text-align: center;
-            margin: 30px 0;
-        }
-        .figure-container img {
-            max-width: 100%;
-            height: auto;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .figure-caption {
-            font-size: 0.9em;
-            color: #555;
-            margin-top: 10px;
-            font-style: italic;
-        }
-        code, pre {
-            background-color: #f4f4f4;
-            border-radius: 4px;
-            font-family: 'Courier New', Courier, monospace;
-        }
-        pre {
-            padding: 15px;
-            overflow-x: auto;
-            border: 1px solid #ddd;
-        }
-        .btn-github {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #24292e;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 15px;
-            font-weight: bold;
-        }
-        .btn-github:hover {
-            background-color: #000;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Análise das emissões de gases de efeito estufa da cidade do Rio de Janeiro (2012 a 2024) com Python, sob princípios FAIR.">
+  <meta name="author" content="Cassiano Siqueira; André de Moraes">
+  <title>Emissões de GEE na Cidade do Rio de Janeiro (2012 a 2024): Artigo</title>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js" charset="utf-8"></script>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #3b82f6;
+      --text: #1f2937;
+      --text-muted: #4b5563;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --code-bg: #f1f5f9;
+      --font-serif: "Merriweather", Georgia, serif;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--text);
+      background-color: var(--bg);
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--surface);
+      padding: 3.5rem 4rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border);
+    }
+
+    /* Cabeçalho Acadêmico */
+    header {
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 2rem;
+      margin-bottom: 2.5rem;
+    }
+
+    h1.paper-title {
+      font-family: var(--font-sans);
+      font-size: 2.1rem;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--primary);
+      margin-bottom: 1.2rem;
+    }
+
+    .meta-block {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .authors {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .affiliations {
+      font-style: italic;
+    }
+
+    .repo-badge {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.4rem 0.8rem;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      text-decoration: none;
+      color: var(--primary);
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: background 0.2s ease;
+    }
+
+    .repo-badge:hover {
+      background: #e2e8f0;
+    }
+
+    /* Abstract / Resumo */
+    .abstract-box {
+      font-family: var(--font-sans);
+      background-color: var(--bg);
+      border-left: 4px solid var(--primary-light);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2.5rem;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .abstract-box h3 {
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+      color: var(--primary);
+    }
+
+    .abstract-box p {
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .keywords {
+      margin-top: 0.8rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* Navegação / Sumário */
+    nav.toc {
+      font-family: var(--font-sans);
+      background: #fdfefe;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.2rem 1.8rem;
+      margin-bottom: 2.5rem;
+    }
+
+    nav.toc h4 {
+      font-size: 1rem;
+      color: var(--primary);
+      margin-bottom: 0.6rem;
+    }
+
+    nav.toc ol {
+      padding-left: 1.2rem;
+    }
+
+    nav.toc li {
+      margin: 0.3rem 0;
+    }
+
+    nav.toc a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.92rem;
+    }
+
+    nav.toc a:hover {
+      color: var(--primary-light);
+      text-decoration: underline;
+    }
+
+    /* Seções e Tipografia */
+    section {
+      margin-bottom: 2.5rem;
+    }
+
+    h2 {
+      font-family: var(--font-sans);
+      font-size: 1.45rem;
+      font-weight: 600;
+      color: var(--primary);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.4rem;
+      margin-bottom: 1rem;
+      margin-top: 2rem;
+    }
+
+    p {
+      margin-bottom: 1.2rem;
+      text-align: justify;
+    }
+
+    /* Figuras, Visualizações e Códigos */
+    figure {
+      margin: 2rem 0;
+      text-align: center;
+    }
+
+    .chart-container {
+      width: 100%;
+      min-height: 420px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #fff;
+    }
+
+    figcaption {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.6rem;
+      text-align: center;
+    }
+
+    pre, code {
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.9rem;
+      background-color: var(--code-bg);
+    }
+
+    code {
+      padding: 0.2rem 0.4rem;
+      border-radius: 3px;
+    }
+
+    pre {
+      padding: 1rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      margin-bottom: 1.2rem;
+      border: 1px solid var(--border);
+    }
+
+    /* Callouts e FAIR box */
+    .fair-box {
+      font-family: var(--font-sans);
+      border: 1px solid #bfdbfe;
+      background-color: #eff6ff;
+      border-radius: 6px;
+      padding: 1.25rem;
+      margin-top: 2rem;
+    }
+
+    .fair-box h3 {
+      font-size: 1rem;
+      color: #1e40af;
+      margin-bottom: 0.5rem;
+    }
+
+    .fair-box ul {
+      margin-left: 1.2rem;
+      font-size: 0.92rem;
+      color: #1e3a8a;
+    }
+
+    /* Referências */
+    .references ol {
+      padding-left: 1.2rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .references li {
+      margin-bottom: 0.6rem;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem;
+      }
+      h1.paper-title {
+        font-size: 1.6rem;
+      }
+    }
+  
+    .table-wrap{overflow-x:auto;margin:1.5rem 0;font-family:var(--font-sans)}
+    table{border-collapse:collapse;width:100%;font-size:.88rem}
+    caption{font-size:.85rem;color:var(--text-muted);margin-bottom:.5rem;text-align:left}
+    th,td{border-bottom:1px solid var(--border);padding:.45rem .6rem;text-align:right}
+    th:first-child,td:first-child{text-align:left}
+    th{color:var(--primary);border-bottom:2px solid var(--border)}
+    figure img{max-width:100%;height:auto}
+    .nota{font-size:.88rem;color:var(--text-muted)}
+    @media (max-width:768px){p{text-align:left}.chart-container{min-height:360px}}
+</style>
 </head>
 <body>
-
-<div class="container">
+  <div class="container">
     <header>
-        <div class="titulo-site">
-            <img src="assets/brasao-la-salle.png" alt="Brasão La Salle" class="logo-la-salle">
-            <h1>Análise Exploratória das Emissões de Gases de Efeito Estufa na Cidade do Rio de Janeiro</h1>
-        </div>
-        <div class="authors">Cassiano Siqueira & André de Moraes</div>
-        <div class="affiliation">Bacharelado em Sistemas de Informação (6º Período) - Unilasalle - RJ</div>
-                <a href="https://github.com/Cassiano-Siqueira/gases-efeito-estufa" class="btn-github">Acessar Repositório no GitHub</a>
+      <h1 class="paper-title">Emissões de Gases de Efeito Estufa na Cidade do Rio de Janeiro (2012 a 2024): Pipeline Reprodutível e Análise por Escopo e Setor</h1>
+      <div class="meta-block authors">Cassiano Siqueira, André de Moraes</div>
+      <div class="meta-block affiliations">Bacharelado em Sistemas de Informação, Unilasalle RJ<br>
+        Disciplina: Linguagem de Programação (Análise e Visualização de Dados com Python), 6º Período</div>
+      <a href="https://github.com/Cassiano-Siqueira/gases-efeito-estufa" class="repo-badge" target="_blank" rel="noopener noreferrer">Ver Repositório GitHub (Código e Dados)</a>
     </header>
 
-    <div class="abstract">
-        <strong>Resumo:</strong> Este artigo documenta a construção de um pipeline de engenharia de dados e a subsequente análise exploratória do inventário de emissões de Gases de Efeito Estufa (GEE) da cidade do Rio de Janeiro entre 2012 e 2024. Utilizando Python (Pandas, Matplotlib, Seaborn) sob a égide dos princípios FAIR, o estudo higienizou um conjunto de dados governamental complexo, convertendo-o de um formato agregado para um modelo relacional tabular. Os achados revelam tendências importantes nas emissões do Escopo 1 (com destaque para o setor de transportes) e do Escopo 2 (consumo elétrico residencial e comercial), fornecendo subsídios orientados a dados para políticas públicas de mitigação climática urbana.<br><br>
-           </div>
-
-    <h2>1. Introdução</h2>
-    <p>A transição para matrizes energéticas sustentáveis e a mitigação das emissões de Gases de Efeito Estufa (GEE) representam desafios primordiais para as grandes metrópoles. Na cidade do Rio de Janeiro, monitorar esses indicadores é vital para o cumprimento de metas climáticas internacionais. O presente projeto visa aplicar técnicas de Engenharia de Dados para auditar e visualizar o comportamento dessas emissões na última década.</p>
-    <p>Para guiar a análise exploratória e a extração de insights do conjunto de dados, foram estabelecidas as seguintes Perguntas de Pesquisa (Research Questions - RQ):</p>
-    <ul>
-        <li><strong>RQ1:</strong> Como o volume total de emissões de GEE (CO2) no Rio de Janeiro evoluiu ao longo do período (2012-2024)?</li>
-        <li><strong>RQ2:</strong> Quais são os macrossetores que atuam como os principais ofensores de emissões diretas (Escopo 1)?</li>
-        <li><strong>RQ3:</strong> Ao analisar as emissões indiretas por aquisição de energia (Escopo 2), qual a proporção de responsabilidade dos subsetores Residencial e Comercial?</li>
-    </ul>
-
-    <h2>2. Metodologia e Pipeline de Dados</h2>
-    <p>A fonte de dados primária foi extraída do portal de dados abertos da prefeitura, o <em>Data.Rio</em>. O arquivo original (<code>3696.xls</code>) apresentava um formato <em>wide</em> com cabeçalhos multinível, dificultando a ingestão direta por ferramentas de BI e bibliotecas estatísticas.</p>
-    <p>Para o tratamento, desenvolveu-se um script de ETL em Python (<code>src/etl.py</code>) que utilizou a biblioteca <em>Pandas</em>. O processo aplicou a técnica de <em>forward fill</em> para reconstruir anos mesclados, seguido da função <code>pd.melt()</code>, que transformou as múltiplas colunas de anos e escopos numa estrutura <em>long format</em> contendo variáveis limpas: <code>ano</code>, <code>setor</code>, <code>escopo</code> e <code>emissao_tCO2e</code>. Operações de <em>casting</em> garantiram a tipagem correta para exploração numérica contínua.</p>
-
-    <h2>3. Resultados e Discussão</h2>
-    
-    <h3>3.1. Evolução Temporal das Emissões (RQ1)</h3>
-    <p>O gráfico abaixo exibe a linha de tendência do somatório geral de emissões de CO2 na cidade. Observa-se o comportamento macro do município em relação a esforços de mitigação ao longo da década, permitindo identificar picos ou vales associados a eventos econômicos ou políticas ambientais.</p>
-    <div class="figure-container">
-        <img src="assets/rq1_evolucao_temporal.png" alt="Gráfico de Evolução Temporal das Emissões">
-        <div class="figure-caption">Figura 1: Evolução anual das emissões totais de GEE na cidade do Rio de Janeiro.</div>
+    <div class="abstract-box">
+      <h3>Resumo</h3>
+      <p>As cidades concentram grande parte das emissões de gases de efeito estufa (GEE), e inventários municipais abertos permitem monitorar sua evolução. Este trabalho analisa o inventário de emissões da cidade do Rio de Janeiro entre 2012 e 2024, publicado pelo Instituto Municipal de Urbanismo Pereira Passos no portal Data.Rio segundo a metodologia GPC. Desenvolveu-se um pipeline reprodutível em Python (pandas e numpy) que converte a planilha original em uma tabela longa, preserva a hierarquia de setores, distingue zeros de dados ausentes e valida a consistência interna dos totais. A análise exploratória responde a três perguntas sobre a trajetória do total emitido, os principais setores de emissões diretas e a participação dos subsetores Residencial e Comercial nas emissões indiretas por energia. O total caiu 10,9% entre 2012 e 2024, de 22,3 para 19,8 milhões de tCO₂e, com mínimo em 2020; o Escopo 1 responde por cerca de 74% das emissões, e Energia Estacionária e Transportes concentram 84% delas; Residencial e Comercial somam de 55% a 63% do Escopo 2, em séries quase perfeitamente correlacionadas. Constatou-se ainda que a soma ingênua de todos os setores duplica o total. Código, dados e documentação seguem os princípios FAIR.</p>
+      <div class="keywords"><strong>Palavras-chave:</strong> Gases de efeito estufa; Inventário de emissões; Rio de Janeiro; Dados abertos; Python; Princípios FAIR.</div>
     </div>
 
-    <h3>3.2. Principais Ofensores de Emissões Diretas - Escopo 1 (RQ2)</h3>
-    <p>Ao isolar o Escopo 1 (emissões físicas ocorridas dentro dos limites da cidade), a agregação aponta os setores mais críticos. Os transportes, em especial o modal rodoviário, costumam liderar esta categoria devido à forte dependência de combustíveis fósseis (diesel e gasolina) na logística e mobilidade urbana carioca.</p>
-    <div class="figure-container">
-        <img src="assets/rq2_ofensores_escopo1.png" alt="Gráfico dos Maiores Ofensores do Escopo 1">
-        <div class="figure-caption">Figura 2: Top 5 setores com maiores emissões diretas (Escopo 1).</div>
-    </div>
+    <nav class="toc"><h4>Sumário</h4><ol>
+      <li><a href="#intro">Introdução</a></li><li><a href="#metodologia">Metodologia e Pipeline de Dados</a></li>
+      <li><a href="#resultados">Resultados e Discussão</a></li><li><a href="#conclusao">Conclusão</a></li>
+      <li><a href="#fair">Disponibilidade dos Dados e Declaração FAIR</a></li><li><a href="#referencias">Referências</a></li></ol></nav>
 
-    <h3>3.3. Matriz Energética: Residencial vs Comercial - Escopo 2 (RQ3)</h3>
-    <p>O Escopo 2 reflete a emissão indireta gerada pela produção da energia elétrica consumida. A comparação entre os subsetores "Residencial" e "Comercial" demonstra o balanço de demanda energética da cidade. Variações anuais nestas curvas são frequentemente explicadas por crises hídricas (que acionam termelétricas, aumentando o fator de emissão do SIN - Sistema Interligado Nacional) e por dinâmicas de <em>home office</em> e reabertura do comércio.</p>
-    <div class="figure-container">
-        <img src="assets/rq3_matriz_energetica.png" alt="Gráfico de Emissões do Escopo 2">
-        <div class="figure-caption">Figura 3: Emissões indiretas por aquisição de energia elétrica (Residencial x Comercial).</div>
-    </div>
+    <section id="intro">
+      <h2>1. Introdução</h2>
+      <p>As cidades são responsáveis por uma parcela expressiva das emissões de gases de efeito estufa (GEE), principalmente pelo uso de energia, pelo transporte e pela gestão de resíduos. Inventários municipais estruturados pelo <em>Global Protocol for Community-Scale Greenhouse Gas Emission Inventories</em> (GPC) permitem acompanhar essas emissões ao longo do tempo e orientar políticas de mitigação (WRI; C40; ICLEI, 2014). A cidade do Rio de Janeiro publica seu inventário no portal Data.Rio, por meio do Instituto Municipal de Urbanismo Pereira Passos (IPP), em uma planilha com cabeçalho em dois níveis e linhas hierárquicas, o que exige tratamento cuidadoso antes de qualquer agregação.</p>
+      <p>Este trabalho constrói um pipeline determinístico em Python para essa planilha e responde a três perguntas de pesquisa:</p>
+      <ul style="margin:0 0 1.2rem 1.6rem">
+        <li><strong>RQ1.</strong> Como o volume total de emissões (t CO₂e) evoluiu entre 2012 e 2024?</li>
+        <li><strong>RQ2.</strong> Quais setores são os principais ofensores de emissões diretas (Escopo 1)?</li>
+        <li><strong>RQ3.</strong> Qual a participação dos subsetores Residencial e Comercial nas emissões indiretas por energia (Escopo 2)?</li></ul>
+    </section>
 
-    <h2>4. Conclusão</h2>
-    <p>O presente estudo demonstrou a eficácia da aplicação de técnicas de engenharia de dados em Python para o tratamento de planilhas governamentais não estruturadas. A análise exploratória confirmou a necessidade de políticas focadas na descarbonização da frota rodoviária (Escopo 1) e em medidas de eficiência energética para residências e comércio (Escopo 2). Como limitação, o estudo restringe-se aos dados reportados pelo município. Trabalhos futuros poderiam cruzar esses indicadores com dados do PIB municipal para analisar a intensidade de emissões por atividade econômica.</p>
+    <section id="metodologia">
+      <h2>2. Metodologia e Pipeline de Dados</h2>
+      <p><strong>Fonte e granularidade.</strong> Os dados são a Tabela 3696 do Data.Rio/IPP (aba <code>3696_Escopos</code>): emissões anuais, de 2012 a 2024, por setor e por escopo GPC: Escopo 1 (emissões diretas no território), Escopo 2 (eletricidade da rede) e Escopo 3 (demais emissões indiretas), em toneladas de CO₂ equivalente, com CO₂, CH₄ e N₂O convertidos pelos potenciais de aquecimento global do AR5 do IPCC (2014). Após o tratamento, o conjunto tem 2.028 linhas (13 anos × 39 setores × 4 escopos).</p>
+      <p><strong>Tratamento.</strong> O script <code>src/etl.py</code> (pandas e numpy) executa as etapas abaixo, todas documentadas no dicionário de dados (<code>data/data_dictionary.md</code>):</p>
+      <ul style="margin:0 0 1.2rem 1.6rem">
+        <li><strong>Reestruturação:</strong> o ano, presente apenas na primeira coluna de cada bloco mesclado, é propagado (<em>forward fill</em>) e a tabela passa de <em>wide</em> para <em>long</em>.</li>
+        <li><strong>Hierarquia:</strong> a planilha expressa a hierarquia só pela ordem das linhas; o ETL cria <code>nivel</code> (<code>total</code>, <code>macrossetor</code>, <code>subsetor</code>, <code>item_informativo</code>) e <code>macrossetor</code>.</li>
+        <li><strong>Valores ausentes sem imputação:</strong> os símbolos da fonte são preservados: <code>-</code> vira zero; <code>...</code> e <code>NE</code> viram ausentes (<code>NaN</code>), e a coluna <code>qualidade_dado</code> registra a origem de cada valor. Das 2.028 linhas, 1.334 são valores, 132 são zeros e 562 são ausentes.</li>
+        <li><strong>Limpeza de rótulos:</strong> remoção de notas de rodapé, de marcadores como “(2)” e correção de dois erros de digitação.</li>
+        <li><strong>Validação:</strong> a soma dos macrossetores deve reproduzir o <code>TOTAL</code> oficial (divergência máxima observada: ≈ 0%).</li></ul>
+      <pre><code>SIMBOLOS = {
+    &quot;-&quot;:   (0.0,    &quot;zero&quot;),            # zero não resultante de arredondamento
+    &quot;(0)&quot;: (0.0,    &quot;zero_arredondado&quot;),
+    &quot;...&quot;: (np.nan, &quot;nao_disponivel&quot;),  # não aplicável / não disponível
+    &quot;NE&quot;:  (np.nan, &quot;nao_estimado&quot;),
+}
 
-    <h2>5. Disponibilidade dos Dados e Declaração FAIR</h2>
-    <p>Este projeto foi construído em estrita observância aos <strong>Princípios FAIR</strong>:</p>
-    <ul>
-        <li><strong>Findable (Localizável):</strong> Repositório documentado e estruturado.</li>
-        <li><strong>Accessible (Acessível):</strong> Código aberto e dados disponíveis sem necessidade de autenticação.</li>
-        <li><strong>Interoperable (Interoperável):</strong> Dados processados persistidos em padrão aberto (CSV) acompanhados de um <code>data_dictionary.md</code>.</li>
-        <li><strong>Reusable (Reutilizável):</strong> Ambiente isolado através do <code>requirements.txt</code> e licenciado via MIT.</li>
-    </ul>
-    <p>Para reproduzir o ambiente integralmente (via terminal Bash/PowerShell):</p>
-    <pre><code>git clone https://github.com/Cassiano-Siqueira/gases-efeito-estufa.git
+def _converter_valor(valor) -&gt; tuple[float, str]:
+    &quot;&quot;&quot;Converte uma célula em (valor, qualidade) sem inventar dados.&quot;&quot;&quot;
+    if isinstance(valor, str):
+        chave = valor.strip()
+        if chave in SIMBOLOS:
+            return SIMBOLOS[chave]
+        numero = pd.to_numeric(chave.replace(&quot;,&quot;, &quot;.&quot;), errors=&quot;coerce&quot;)
+        return (float(numero), &quot;valor&quot;) if pd.notna(numero) else (np.nan, &quot;nao_disponivel&quot;)
+    if valor is None or pd.isna(valor):
+        return np.nan, &quot;nao_disponivel&quot;
+    return float(valor), &quot;valor&quot;</code></pre>
+      <pre><code>def validar(df, tolerancia=0.005):
+    &quot;&quot;&quot;Soma dos macrossetores deve reproduzir a linha TOTAL oficial.&quot;&quot;&quot;
+    total = df[df.nivel == &quot;total&quot;].set_index([&quot;ano&quot;, &quot;escopo&quot;])[&quot;emissao_tCO2e&quot;]
+    soma = df[df.nivel == &quot;macrossetor&quot;].groupby([&quot;ano&quot;, &quot;escopo&quot;])[&quot;emissao_tCO2e&quot;].sum()
+    pior = ((soma - total).abs() / total).dropna().max()
+    if pior &gt; tolerancia:
+        raise ValueError(f&quot;Soma dos macrossetores diverge do TOTAL em até {pior:.2%}.&quot;)</code></pre>
+      <p><strong>Cuidado com a hierarquia.</strong> Como os subsetores já estão contidos nos macrossetores, somar todas as linhas conta cada tonelada duas vezes. Verificou-se que a soma de macrossetores e subsetores é exatamente o dobro do <code>TOTAL</code> oficial em todos os anos; por isso o total anual deste trabalho vem sempre da linha oficial.</p>
+      <pre><code>oficial = df[(df.nivel == &quot;total&quot;) &amp; (df.escopo == &quot;Total&quot;)].set_index(&quot;ano&quot;)[&quot;emissao_tCO2e&quot;]
+ingenua = (df[df.nivel.isin([&quot;macrossetor&quot;, &quot;subsetor&quot;]) &amp; (df.escopo == &quot;Total&quot;)]
+           .groupby(&quot;ano&quot;)[&quot;emissao_tCO2e&quot;].sum())
+print((ingenua / oficial).round(2).unique())   # -&gt; [2.]</code></pre>
+      <p><strong>Persistência e análise.</strong> O resultado é salvo em CSV compactado (<code>.csv.gz</code>), formato aberto. As agregações e figuras estão em <code>src/metricas.py</code> e são exploradas em <code>notebooks/analise_exploratoria.ipynb</code>. Os gráficos interativos deste artigo usam Plotly.js sobre os mesmos dados (<code>docs/assets/dados_graficos.json</code>). As medidas descritivas empregadas são média, desvio-padrão, coeficiente de variação (CV), variação percentual, participação relativa, concentração (soma das maiores participações) e correlação de Pearson.</p>
+    </section>
+
+    <section id="resultados">
+      <h2>3. Resultados e Discussão</h2>
+      <h3 style="font-family:var(--font-sans);margin:1.2rem 0 .6rem;color:var(--primary)">3.1 RQ1: Evolução do total de emissões</h3>
+      <p>O total emitido pelo município passou de 22,27 milhões de tCO₂e em 2012 para 19,84 milhões em 2024, queda de 10,9%. A série tem média de 21,20 Mt e baixa dispersão (desvio-padrão de 1,85 Mt; CV de 8,7%). O máximo ocorre em 2014 (24,17 Mt); de lá até 2024 a redução é de 17,9%. A Figura 1 mostra o total e sua decomposição por escopo.</p>
+      <figure><div id="grafico-rq1" class="chart-container"></div>
+        <noscript><img src="assets/rq1_evolucao_temporal.png" alt="Emissões totais por escopo, 2012 a 2024"></noscript>
+        <figcaption>Figura 1: Emissões de GEE por escopo e total oficial, 2012 a 2024 (Mt CO₂e). Fonte: elaboração própria a partir de Data.Rio/IPP (tabela 3696).</figcaption></figure>
+      <p>O ponto mais marcante é 2020, com 17,36 Mt (−17,1% sobre 2019), o menor valor da série. A queda atingiu todos os escopos (Escopo 1: −12,5%; Escopo 2: −26,1%; Escopo 3: −29,9%) e foi mais forte em Transportes (−19,2% no Escopo 1), enquanto Processos Industriais e Uso de Produtos cresceu 4,7%. Em 2021 o total subiu 18,7%, mas permaneceu abaixo de 2019, e desde 2022 oscila próximo de 19,3 a 19,8 Mt. A coincidência temporal sugere relação com as restrições da pandemia de COVID-19, mas a base não contém dados sobre causas; trata-se de hipótese, não de resultado. Também chama atenção a estabilidade da composição: o Escopo 1 responde por 73,2% do total em 2012 e 74,0% em 2024.</p>
+
+      <h3 style="font-family:var(--font-sans);margin:1.2rem 0 .6rem;color:var(--primary)">3.2 RQ2: Principais ofensores de emissões diretas (Escopo 1)</h3>
+      <p>Em 2024, o Escopo 1 somou 14,68 Mt. Dois macrossetores concentram 84,0% desse valor: Energia Estacionária (52,9%) e Transportes (31,1%), seguidos de Processos Industriais e Uso de Produtos (12,2%), Resíduos (3,5%) e Agropecuária, Floresta e Uso do Solo (0,3%). Entre os subsetores, três respondem por 87,0% do Escopo 1: Indústrias de manufatura e construção (45,4%), Transporte rodoviário (30,4%) e Produção de ferro e aço (11,2%). A Figura 2 permite alternar entre valores absolutos e participações.</p>
+      <figure><div id="grafico-rq2" class="chart-container"></div>
+        <noscript><img src="assets/rq2_ofensores_escopo1.png" alt="Escopo 1 por macrossetor e maiores subsetores"></noscript>
+        <figcaption>Figura 2: Emissões de Escopo 1 por macrossetor, 2012 a 2024 (Mt CO₂e; use os botões para ver a participação %). Fonte: elaboração própria a partir de Data.Rio/IPP.</figcaption></figure>
+      <p>Entre 2012 e 2024, o Escopo 1 de Transportes recuou 15,9%, o de Processos Industriais, 26,3%, e o de Resíduos, 45,9%, enquanto o de Energia Estacionária cresceu 3,9%. Assim, a participação de Energia Estacionária subiu de 45,8% para 52,9% do Escopo 1: a redução observada veio dos outros macrossetores, enquanto o maior deles, dominado pela indústria de manufatura, não diminuiu. Os valores de Agropecuária, Floresta e Uso do Solo incluem remoções (Reflorestamento e Arborização urbana têm valores negativos), mas são pequenos frente ao total.</p>
+
+      <h3 style="font-family:var(--font-sans);margin:1.2rem 0 .6rem;color:var(--primary)">3.3 RQ3: Residencial e Comercial no Escopo 2</h3>
+      <p>Somados, Residencial e Comercial respondem por 55,5% a 62,6% do Escopo 2 ao longo da série (55,5% em 2024), com o Comercial ligeiramente à frente (28,6% contra 26,9% em 2024). O restante vem de perdas comerciais de energia elétrica, indústrias, setor institucional e iluminação pública, que podem ser acrescentados à Figura 3 pela legenda.</p>
+      <figure><div id="grafico-rq3" class="chart-container"></div>
+        <noscript><img src="assets/rq3_matriz_energetica.png" alt="Escopo 2 por subsetor"></noscript>
+        <figcaption>Figura 3: Emissões de Escopo 2 por subsetor de Energia Estacionária, 2012 a 2024 (mil t CO₂e; clique na legenda para exibir outros subsetores). Fonte: elaboração própria a partir de Data.Rio/IPP.</figcaption></figure>
+      <p>O Escopo 2 é muito mais volátil que o total: o CV de Residencial e Comercial é de 40,7% e 42,6%, contra 8,7% do total. O Escopo 2 do município foi de 1,36 Mt em 2012 a 2,96 Mt em 2014, depois a 0,77 Mt em 2023 e 1,15 Mt em 2024, com salto de 108,3% em 2021. As duas séries têm correlação de 0,99. Essa sincronia sugere um fator comum que afeta todos os consumidores de eletricidade, como a intensidade de emissões da rede, e não mudanças de comportamento de cada setor. Os dados não trazem fatores de emissão, então essa leitura é uma hipótese a ser testada com dados externos.</p>
+    </section>
+
+    <section id="conclusao">
+      <h2>4. Conclusão</h2>
+      <p>O pipeline desenvolvido converte a planilha do Data.Rio em uma tabela longa, validada e rastreável. Sobre ela, observou-se que (RQ1) as emissões totais caíram 10,9% entre 2012 e 2024, com mínimo em 2020 e estabilização posterior; (RQ2) Energia Estacionária e Transportes concentram 84% das emissões diretas, com destaque para a indústria de manufatura e o transporte rodoviário; e (RQ3) Residencial e Comercial somam de 55% a 63% do Escopo 2, em séries altamente sincronizadas. Metodologicamente, a principal lição é que a hierarquia da tabela precisa ser tratada explicitamente: somar todas as linhas duplicaria o total.</p>
+      <p><strong>Limitações.</strong> (i) Os valores são estimativas de inventário, e a fonte informa que 2012 a 2021 foram revisados em 2024; (ii) a base não contém variáveis explicativas (atividade econômica, clima, fatores de emissão), então as interpretações causais apresentadas são hipóteses; (iii) o símbolo <code>NE</code> não consta nas notas da fonte, e sua interpretação como “não estimado” é dos autores; (iv) a análise usa apenas a aba por escopo, sem decomposição por gás.</p>
+      <p><strong>Trabalhos futuros.</strong> Cruzar as emissões com o PIB e a população do município, incorporar fatores de emissão da rede elétrica para testar a hipótese da RQ3, analisar a aba por gás (CO₂, CH₄, N₂O) e automatizar a obtenção dos dados a partir do portal.</p>
+    </section>
+
+    <section id="fair">
+      <h2>5. Disponibilidade dos Dados e Declaração FAIR</h2>
+      <div class="fair-box"><h3>Declaração de Aderência FAIR</h3><ul>
+        <li><strong>Findable:</strong> repositório público com <code>README.md</code> completo (resumo, palavras-chave e link para a fonte), identificação de autoria, disciplina e instituição.</li>
+        <li><strong>Accessible:</strong> código e dados abertos no GitHub, sem autenticação; artigo publicado via GitHub Pages, com layout responsivo.</li>
+        <li><strong>Interoperable:</strong> dados processados em CSV compactado (<code>.csv.gz</code>) e dicionário de dados em <code>data/data_dictionary.md</code>.</li>
+        <li><strong>Reusable:</strong> licença MIT (código) e CC BY 4.0 (dados derivados e texto); <code>requirements.txt</code> com versões fixadas.</li></ul></div>
+      <p style="margin-top:1.2rem">Para reproduzir integralmente o pipeline:</p>
+      <pre><code>git clone https://github.com/Cassiano-Siqueira/gases-efeito-estufa.git
 cd gases-efeito-estufa
-python -m venv .venv
-# Ativar o ambiente (dependendo do OS)
+python -m venv .venv &amp;&amp; source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-python src/etl.py</code></pre>
+python src/etl.py                                   # gera data/processed/emissoes_gee_rj_limpo.csv.gz
+pip install notebook &amp;&amp; jupyter notebook notebooks/analise_exploratoria.ipynb</code></pre>
+      <p class="nota">Dados originais: Data.Rio/IPP, tabela 3696 (<code>data/raw/3696.xls</code>), redistribuídos sob os termos de uso do portal de origem.</p>
+    </section>
 
-    <h2>6. Referências</h2>
-    <ol>
-        <li>DATA.RIO. <em>Emissões de gases de efeito estufa (GEE) da Cidade do Rio de Janeiro</em>. Disponível em: https://www.data.rio. Acesso em: 2026.</li>
-        <li>MCKINNEY, Wes. <em>Data Structures for Statistical Computing in Python</em>, Proceedings of the 9th Python in Science Conference, 2010.</li>
-        <li>WILKINSON, M. D. et al. <em>The FAIR Guiding Principles for scientific data management and stewardship</em>. Scientific Data, v. 3, n. 160018, 2016.</li>
-    </ol>
-</div>
+    <section id="referencias" class="references">
+      <h2>6. Referências</h2>
+      <ol>
+        <li>HUNTER, J. D. Matplotlib: a 2D graphics environment. <em>Computing in Science &amp; Engineering</em>, v. 9, n. 3, p. 90-95, 2007.</li>
+        <li>INTERGOVERNMENTAL PANEL ON CLIMATE CHANGE (IPCC). <em>Climate Change 2014: Synthesis Report</em>. Contribution of Working Groups I, II and III to the Fifth Assessment Report. Geneva: IPCC, 2014.</li>
+        <li>INSTITUTO MUNICIPAL DE URBANISMO PEREIRA PASSOS (IPP). <em>Emissões de gases de efeito estufa (GEE) da Cidade do Rio de Janeiro por escopo segundo metodologia GPC, em t CO2e, 2012 a 2024</em> (Tabela 3696). Rio de Janeiro: Prefeitura da Cidade do Rio de Janeiro, Data.Rio. Disponível em: &lt;https://www.data.rio&gt;. Acesso em: 19 nov. 2026.</li>
+        <li>INSTITUTO MUNICIPAL DE URBANISMO PEREIRA PASSOS (IPP). <em>Monitoramento das emissões de gases de efeito estufa da cidade do Rio de Janeiro: 2012 a 2021</em>. Rio de Janeiro: Prefeitura da Cidade do Rio de Janeiro, 2023. Disponível em: &lt;https://ambienteclima.prefeitura.rio/wp-content/uploads/sites/81/2023/12/InventarioGEE2020_2021.pdf&gt;. Acesso em: 19 nov. 2026.</li>
+        <li>MCKINNEY, W. Data structures for statistical computing in Python. In: PYTHON IN SCIENCE CONFERENCE, 9., 2010, Austin. <em>Proceedings</em> [...]. Austin: SciPy, 2010. p. 56-61.</li>
+        <li>PLOTLY TECHNOLOGIES INC. <em>Collaborative data science</em>. Montreal: Plotly Technologies Inc., 2015. Disponível em: &lt;https://plot.ly&gt;. Acesso em: 19 nov. 2026.</li>
+        <li>WILKINSON, M. D. et al. The FAIR Guiding Principles for scientific data management and stewardship. <em>Scientific Data</em>, v. 3, art. 160018, 2016.</li>
+        <li>WORLD RESOURCES INSTITUTE (WRI); C40 CITIES CLIMATE LEADERSHIP GROUP; ICLEI. <em>Global Protocol for Community-Scale Greenhouse Gas Emission Inventories (GPC): an accounting and reporting standard for cities</em>. Version 1.1. [S. l.]: WRI; C40; ICLEI, 2014.</li>
+      </ol>
+    </section>
+  </div>
 
+  <script src="assets/dados_graficos.js"></script>
+  <script>
+    const D = window.DADOS, MT = 1e6;
+    const fonte = { family: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif' };
+    const cfg = { responsive: true, displayModeBar: false };
+    const base = (titulo, y) => ({ title: titulo, font: fonte, xaxis: { title: 'Ano', dtick: 1, tickangle: -45 }, yaxis: { title: y, rangemode: 'tozero' },
+      margin: { t: 50, r: 20, l: 60, b: 90 }, legend: { orientation: 'h', y: -0.3 }, autosize: true });
+    const cEscopo = { 'Escopo 1': '#1e3a8a', 'Escopo 2': '#2a9d8f', 'Escopo 3': '#e9c46a' };
+    const fmt = (v, d = 2) => v.map(x => +(x / MT).toFixed(d));
+
+    // Figura 1: total por escopo
+    const t1 = Object.keys(D.escopos).map(k => ({ x: D.anos, y: fmt(D.escopos[k]), name: k, type: 'bar', marker: { color: cEscopo[k] }, hovertemplate: k + ': %{y:.2f} Mt<extra></extra>' }));
+    t1.push({ x: D.anos, y: fmt(D.total), name: 'Total', type: 'scatter', mode: 'lines+markers', line: { color: '#111827', width: 2.5 }, hovertemplate: 'Total: %{y:.2f} Mt<extra></extra>' });
+    Plotly.newPlot('grafico-rq1', t1, { ...base('Emissões de GEE por escopo (Mt CO₂e)', 'Milhões de t CO₂e'), barmode: 'stack', hovermode: 'x unified' }, cfg);
+
+    // Figura 2: Escopo 1 por macrossetor, com alternância absoluto/percentual
+    const cMac = ['#1e3a8a', '#3b82f6', '#2a9d8f', '#e9c46a', '#9ca3af'];
+    const ordem = Object.keys(D.escopo1_macrossetores).sort((a, b) => D.escopo1_macrossetores[b].at(-1) - D.escopo1_macrossetores[a].at(-1));
+    const t2 = ordem.map((k, i) => ({ x: D.anos, y: fmt(D.escopo1_macrossetores[k]), name: k, type: 'bar', marker: { color: cMac[i] }, hovertemplate: '%{y:.2f} Mt<extra>' + k + '</extra>' }));
+    Plotly.newPlot('grafico-rq2', t2, { ...base('Escopo 1 por macrossetor', 'Milhões de t CO₂e'), barmode: 'stack',
+      legend: { orientation: 'h', y: -0.45 }, margin: { t: 90, r: 20, l: 60, b: 90 },
+      updatemenus: [{ type: 'buttons', direction: 'right', x: 0, y: 1.2, buttons: [
+        { label: 'Absoluto', method: 'relayout', args: [{ barnorm: '', 'yaxis.title': 'Milhões de t CO₂e' }] },
+        { label: 'Participação (%)', method: 'relayout', args: [{ barnorm: 'percent', 'yaxis.title': '% do Escopo 1' }] }] }] }, cfg);
+
+    // Figura 3: Escopo 2 por subsetor (Residencial e Comercial visíveis)
+    const cSub = { 'Residencial': '#c8553d', 'Comercial': '#3d7ea6' };
+    const t3 = Object.keys(D.escopo2_subsetores).sort((a, b) => D.escopo2_subsetores[b].at(-1) - D.escopo2_subsetores[a].at(-1)).map(k => ({
+      x: D.anos, y: D.escopo2_subsetores[k].map(v => +(v / 1e3).toFixed(1)), name: k, type: 'scatter', mode: 'lines+markers',
+      visible: k in cSub ? true : 'legendonly', line: { width: 3, color: cSub[k] }, hovertemplate: '%{y:,.0f} mil t<extra>' + k + '</extra>' }));
+    Plotly.newPlot('grafico-rq3', t3, { ...base('Escopo 2 por subsetor (mil t CO₂e)', 'Mil t CO₂e'), legend: { orientation: 'h', y: -0.5 }, margin: { t: 50, r: 20, l: 60, b: 120 }, hovermode: 'x unified' }, cfg);
+  </script>
 </body>
 </html>

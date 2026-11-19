@@ -1,21 +1,17 @@
-.ipynb_checkpoints/
-*/.ipynb_checkpoints/*
-.jupyter_ystore.db
-profile_default/
-ipython_config.py
+# Ambientes virtuais
+.venv/
+venv/
+env/
+
+# Python
 __pycache__/
 *.py[cod]
-*$py.class
-*.so
-.Python
-build/
-dist/
-*.egg-info/
-.env
-.venv/
-env/
-venv/
+.pytest_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Sistema operacional e editores
 .DS_Store
 Thumbs.db
-.vscode/
 .idea/
