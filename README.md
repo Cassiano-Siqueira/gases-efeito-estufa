@@ -8,10 +8,10 @@
 | | |
 |---|---|
 | **Autores** | Cassiano Siqueira · André de Moraes |
-| **Orientador(a)** | _[NOME COMPLETO DO PROFESSOR ORIENTADOR]_ |
+| **Professor** | Alexandre Neves Louzada |
 | **Instituição / Curso** | Unilasalle RJ, Bacharelado em Sistemas de Informação (6º período) |
 | **Disciplina** | Linguagem de Programação (Análise e Visualização de Dados com Python) |
-| **Semestre** | _[2026.2]_ |
+| **Semestre** | _2026.2_ |
 | **Artigo (GitHub Pages)** | <https://cassiano-siqueira.github.io/gases-efeito-estufa/> |
 
 **Palavras-chave:** gases de efeito estufa · inventário de emissões · Rio de Janeiro · dados abertos · Python · princípios FAIR
